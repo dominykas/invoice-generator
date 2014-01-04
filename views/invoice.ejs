@@ -1,0 +1,409 @@
+<%
+
+var printAmount = require("./printAmount");
+
+%><!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title><%= ourselves.shortTitle %> invoice</title>
+	<style>
+	body {
+		font-family: sans-serif;
+		width: 640px;
+		margin: 0 auto;
+		font-size: 12px;
+		-webkit-print-color-adjust:exact;
+	}
+	header {
+		margin-bottom: 2em;
+	}
+	header h1, header p, header rt {
+		margin: 0;
+		text-align: center;
+	}
+	.from h2, .to h2 {
+		font-size: 14px;
+		margin: 0;
+	}
+	.from {
+		float: left;
+	}
+	.to {
+		float: right;
+	}
+	section {
+		padding: 1em 0;
+		clear: both;
+	}
+	table {
+		width: 100%;
+		border-spacing: 1px;
+	}
+	th, td {
+		border: 1px solid #999;
+		padding: 0.25em;
+	}
+	.num {
+		text-align: right;
+	}
+	.unit, .unit rt {
+		text-align: center;
+	}
+	th[scope=row], th[scope=row] rt {
+		font-weight: normal;
+		text-align: left;
+	}
+	tfoot th[scope=row], tfoot th[scope=row] rt {
+		text-align: right;
+		font-weight: bold;
+	}
+	thead, tfoot {
+		background: #eee;
+		font-weight: bold;
+	}
+	footer {
+		border-top: 1px solid #000;
+		text-align: center;
+	}
+
+	dl {
+		overflow: hidden;
+		position: relative;
+	}
+	dt, dd {
+		display: inline;
+		margin: 0;
+		line-height: 2em;
+	}
+	.summary dt, .summary dd {
+		line-height: 3em;
+	}
+	dt:after {
+		content: ': ';
+	}
+	dd:not(:last-child):after {
+		content: '\A';
+		white-space: pre;
+	}
+	dd {
+		font-size: 125%;
+	}
+	rt {
+		font-size: 75%;
+		color: #999;
+		text-align: left;
+	}
+	th rt {
+		text-align: center;
+	}
+
+	.entry {
+		font-style: oblique;
+		padding-left: 0.5em;
+	}
+	.entry:before {
+		content: "";
+		position: absolute;
+		border-bottom: 1px dotted #000;
+		width: 100%;
+		height: 2.25em;
+		margin-left: -0.25em;
+	}
+
+	.bank h2 {
+		font-size: 12px; margin: 0
+	}
+	.bank dl {
+		margin-left: 3em;
+	}
+	.bank dd:after {
+		display: none;
+	}
+	.bank dd {
+		margin-right: 1em;
+	}
+	.bank dd:first-of-type:after {
+		content: '\A';
+		white-space: pre;
+		display: inline;
+	}
+	</style>
+</head>
+<body>
+<header>
+	<h1><ruby>
+		PVM sąskaita-faktūra
+		<rp>/</rp>
+		<rt>Invoice</rt>
+	</ruby><br/><ruby>
+		Serija <%= invoice.series %> nr. <%= invoice.number %>
+		<rp>/</rp>
+		<rt>No. <%= invoice.series %>-<%= invoice.number %></rt>
+	</ruby></h1>
+	<p><ruby>
+		<%= invoice.date.textLT %>
+		<rp>/</rp>
+		<rt><%= invoice.date.textEN %></rt>
+	</ruby></p>
+</header>
+
+<div class="from">
+	<h2><%= ourselves.title %></h2>
+	<p>
+		<%- ourselves.address %>
+	</p>
+	<dl>
+		<dt><ruby>
+			Įmonės kodas
+			<rp>/</rp>
+			<rt>Company number</rt>
+		</ruby></dt>
+		<dd><%= ourselves.regNo %></dd>
+
+		<dt><ruby>
+			PVM mokėtojo kodas
+			<rp>/</rp>
+			<rt>VAT number</rt>
+		</ruby></dt>
+		<dd><%= ourselves.vatNo %></dd>
+	</dl>
+</div>
+
+<div class="to">
+	<h2><%= customer.title %></h2>
+	<p>
+		<%- customer.address %>
+	</p>
+	<dl>
+		<dt><ruby>
+			Įmonės kodas
+			<rp>/</rp>
+			<rt>Company number</rt>
+		</ruby></dt>
+		<dd><%= customer.regNo %></dd>
+
+		<dt><ruby>
+			PVM mokėtojo kodas
+			<rp>/</rp>
+			<rt>VAT number</rt>
+		</ruby></dt>
+		<dd><%= customer.vatNo %></dd>
+
+	</dl>
+</div>
+
+<section>
+	<table>
+		<thead>
+			<tr>
+				<th scope="col"><ruby>
+					Prekės/paslaugos
+					<rp>/</rp>
+					<rt>Goods/services</rt>
+				</ruby></th>
+				<th scope="col"><ruby>
+					Kiekis
+					<rp>/</rp>
+					<rt>Amount</rt>
+				</ruby></th>
+				<th scope="col"><ruby>
+					Mato vnt.
+					<rp>/</rp>
+					<rt>Unit</rt>
+				</ruby></th>
+				<th scope="col"><ruby>
+					Kaina
+					<rp>/</rp>
+					<rt>Price</rt>
+				</ruby></th>
+				<th scope="col" colspan=2><ruby>
+					Suma
+					<rp>/</rp>
+					<rt>Sum</rt>
+				</ruby></th>
+			</tr>
+		</thead>
+		<% items.forEach(function(item) { %><tr>
+			<th scope="row"><ruby><% if (typeof(item.description) == "undefined") { %>
+				Programinės įrangos projektavimas ir programavimas
+				<rp>/</rp>
+				<rt>Software design and development</rt>
+			<% } else { %>
+				<%= item.description.textLT %>
+				<rp>/</rp>
+				<rt><%= item.description.textEN %></rt>
+			<% } %></ruby></th>
+			<td class="num"><%= item.qty.value %></td>
+			<td class="unit"><ruby>
+				<%= item.qty.unit.textLT %>
+				<rp>/</rp>
+				<rt><%= item.qty.unit.textEN %></rt>
+			</ruby></td>
+			<td class="num"><%- printAmount(item.rate.value, item.rate.currency, false) %></td>
+			<td class="num"><% if (!invoice.noEur) { %><ruby>
+				<%- printAmount(item.total.eur.value, "EUR") %>
+				<rp>/</rp>
+				<rt><%- printAmount(item.total.ltl.value, "LTL") %></rt>
+			</ruby><% } else { %><%- printAmount(item.total.ltl.value, "LTL") %><% } %></td>
+		</tr><% }) %>
+		<tfoot>
+			<tr class="total">
+				<th scope="row" colspan=4><ruby>
+					Viso:
+					<rp>/</rp>
+					<rt>Total</rt>
+				</ruby></th>
+				<td class="num"><% if (!invoice.noEur) { %><ruby>
+					<%- printAmount(totalExVat.eur.value, "EUR") %>
+					<rp>/</rp>
+					<rt><%- printAmount(totalExVat.ltl.value, "LTL") %></rt>
+				</ruby><% } else { %><%- printAmount(totalExVat.ltl.value, "LTL") %><% } %></td>
+			</tr>
+			<tr class="total">
+				<th scope="row" colspan=4><ruby>
+					PVM (<%= vatRate %>%)<% if (!vatRate) { %>*<% } %>:
+					<rp>/</rp>
+					<rt>VAT (<%= vatRate %>%)<% if (!vatRate) { %>*<% } %></rt>
+				</ruby></th>
+				<td class="num"><% if (!invoice.noEur) { %><ruby>
+					<%- printAmount(totalVat.eur.value, "EUR") %>
+					<rp>/</rp>
+					<rt><%- printAmount(totalVat.ltl.value, "LTL") %></rt>
+				</ruby><% } else { %><%- printAmount(totalVat.ltl.value, "LTL") %><% } %></td>
+			</tr>
+			<tr class="total">
+				<th scope="row" colspan=4><ruby>
+					Viso (su PVM):
+					<rp>/</rp>
+					<rt>Total (incl. VAT)</rt>
+				</ruby></th>
+				<td class="num"><% if (!invoice.noEur) { %><ruby>
+					<%- printAmount(totalIncVat.eur.value, "EUR") %>
+					<rp>/</rp>
+					<rt><%- printAmount(totalIncVat.ltl.value, "LTL") %></rt>
+				</ruby><% } else { %><%- printAmount(totalIncVat.ltl.value, "LTL") %><% } %></td>
+			</tr>
+		</tfoot>
+	</table>
+</section>
+<% if (!vatRate) { %><p><ruby>
+	* Pagal LR PVM įstatymo 13 str. 6 dalį, remiantis direktyvos 2006/112/EB 56(1) straipsniu
+	<rp>/</rp>
+	<rt>* By Law on VAT of Republic of Lithuania, Article 13 Part 6, as per Article 56(1) of Council Directive 2006/112/EB</rt>
+</ruby></p><% } %>
+
+<dl class="summary">
+
+	<% if (!invoice.noEur) { %>
+		<dt><ruby>
+			Mokėtina suma
+			<rp>/</rp>
+			<rt>Amount payable</rt>
+		</ruby></dt>
+		<dd class="entry"><ruby>
+			<%= totalIncVat.eur.textLT %>
+			<rp>/</rp>
+			<rt><%= totalIncVat.eur.textEN %></rt>
+		</ruby></dd>
+		<dt><ruby>
+			Ekvivalentas
+			<rp>/</rp>
+			<rt>Equivalent</rt>
+		</ruby></dt>
+		<dd class="entry"><ruby>
+			<%= totalIncVat.ltl.textLT %>
+			<rp>/</rp>
+			<rt><%= totalIncVat.ltl.textEN %></rt>
+		</ruby></dd>
+	<% } else { %>
+		<dt><ruby>
+			Mokėtina suma
+			<rp>/</rp>
+			<rt>Amount payable</rt>
+		</ruby></dt>
+		<dd class="entry"><ruby>
+			<%= totalIncVat.ltl.textLT %>
+			<rp>/</rp>
+			<rt><%= totalIncVat.ltl.textEN %></rt>
+		</ruby></dd>
+		<dt><ruby>
+			Ekvivalentas
+			<rp>/</rp>
+			<rt>Equivalent</rt>
+		</ruby></dt>
+		<dd class="entry"><ruby>
+			<%= totalIncVat.eur.textLT %>
+			<rp>/</rp>
+			<rt><%= totalIncVat.eur.textEN %></rt>
+		</ruby></dd>
+	<% } %>
+
+	<dt><ruby>
+		Sąskaitą išrašė
+		<rp>/</rp>
+		<rt>Issued by</rt>
+	</ruby></dt>
+	<dd class="entry">
+		<ruby>
+			<%= ourselves.issuedBy.jobTitle.textLT %>
+			<rp>/</rp>
+			<rt><%= ourselves.issuedBy.jobTitle.textEN %></rt>
+		</ruby>
+		<%= ourselves.issuedBy.person %>
+	</dd>
+
+	<dt><ruby>
+		Sąskaitą priėmė
+		<rp>/</rp>
+		<rt>Accepted by</rt>
+	</ruby></dt>
+	<dd class="entry"></dd>
+</dl>
+
+<section class="bank">
+	<h2><ruby>
+		Prašome sumokėti į:
+		<rp>/</rp>
+		<rt>Please pay to:</rt>
+	</ruby></h2>
+	<dl>
+		<dt><ruby>
+			Sąskaitos numeris
+			<rp>/</rp>
+			<rt>Account number</rt>
+		</ruby></dt>
+		<dd><%= ourselves.payTo.account %></dd>
+
+		<dt><ruby>
+			Bankas
+			<rp>/</rp>
+			<rt>Bank</rt>
+		</ruby></dt>
+		<dd><%= ourselves.payTo.bank %></dd>
+
+		<dt><ruby>
+			Banko kodas
+			<rp>/</rp>
+			<rt>Bank code</rt>
+		</ruby></dt>
+		<dd><%= ourselves.payTo.code %></dd>
+
+		<dt><ruby>
+			SWIFT kodas
+			<rp>/</rp>
+			<rt>SWIFT code</rt>
+		</ruby></dt>
+		<dd><%= ourselves.payTo.swift %></dd>
+
+	</dl>
+</section>
+
+<footer>
+	<p>
+		<a href="mailto:<%= ourselves.email %>"><%= ourselves.email %></a> <a href="<%= ourselves.website %>"><%= ourselves.website %></a>
+	</p>
+</footer>
+
+</body>
+</html>
