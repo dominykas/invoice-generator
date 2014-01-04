@@ -24,4 +24,4 @@ License:
  * My code: MIT
  * node_modules: usually mentioned in package.json or README.md where appropriate
  * toWords.en.js: mentioned in the file
- * toWords.lt.js: I do not know. Seriously. I think I rewrote everything I copy/pasted from somewhere, but I might be wrong.
+ * toWords.lt.js: I do not know. Seriously. I think I rewrote everything I copy/pasted from somewhere, but I might be wrong. Looking at the code I remember writing more of it than copying. Because it's nice. But correct me if I'm wrong!
