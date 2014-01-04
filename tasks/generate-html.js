@@ -36,7 +36,7 @@ var en_EN = {
 	}
 };
 
-var getInvoiceHtml = function (data, customer) {
+var getInvoiceHtml = function (data, customer, ourselves) {
 
 	var invoiceTotalEur = 0;
 	var invoiceTotalLtl = 0;
@@ -100,6 +100,8 @@ var getInvoiceHtml = function (data, customer) {
 	data.totalIncVat.eur.textLT = firstCap(toWordsLt(Math.floor(data.totalIncVat.eur.value), 'EUR')) + ' ' + ctEur + ' ct.';
 	data.totalIncVat.ltl.textLT = firstCap(toWordsLt(Math.floor(data.totalIncVat.ltl.value), 'LTL')) + ' ' + ctLtl + ' ct.';
 
+	data.ourselves = ourselves;
+
 	return renderInvoiceFn(data);
 };
 
@@ -114,7 +116,7 @@ module.exports = function (grunt) {
 		require('./../data/invoices').forEach(function (invData) {
 			var fn = path.join(__dirname, '..', 'output', getInvoiceFn(invData));
 			console.log("Writing: %s", fn);
-			fs.writeFileSync(fn, getInvoiceHtml(invData, customers[invData.invoice.customer]));
+			fs.writeFileSync(fn, getInvoiceHtml(invData, customers[invData.invoice.customer], customers.ourselves));
 		});
 	});
 };
