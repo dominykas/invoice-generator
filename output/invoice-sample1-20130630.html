@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>example.com invoice</title>
+	<style>
+	body {
+		font-family: sans-serif;
+		width: 640px;
+		margin: 0 auto;
+		font-size: 12px;
+		-webkit-print-color-adjust:exact;
+	}
+	header {
+		margin-bottom: 2em;
+	}
+	header h1, header p, header rt {
+		margin: 0;
+		text-align: center;
+	}
+	.from h2, .to h2 {
+		font-size: 14px;
+		margin: 0;
+	}
+	.from {
+		float: left;
+	}
+	.to {
+		float: right;
+	}
+	section {
+		padding: 1em 0;
+		clear: both;
+	}
+	table {
+		width: 100%;
+		border-spacing: 1px;
+	}
+	th, td {
+		border: 1px solid #999;
+		padding: 0.25em;
+	}
+	.num {
+		text-align: right;
+	}
+	.unit, .unit rt {
+		text-align: center;
+	}
+	th[scope=row], th[scope=row] rt {
+		font-weight: normal;
+		text-align: left;
+	}
+	tfoot th[scope=row], tfoot th[scope=row] rt {
+		text-align: right;
+		font-weight: bold;
+	}
+	thead, tfoot {
+		background: #eee;
+		font-weight: bold;
+	}
+	footer {
+		border-top: 1px solid #000;
+		text-align: center;
+	}
+
+	dl {
+		overflow: hidden;
+		position: relative;
+	}
+	dt, dd {
+		display: inline;
+		margin: 0;
+		line-height: 2em;
+	}
+	.summary dt, .summary dd {
+		line-height: 3em;
+	}
+	dt:after {
+		content: ': ';
+	}
+	dd:not(:last-child):after {
+		content: '\A';
+		white-space: pre;
+	}
+	dd {
+		font-size: 125%;
+	}
+	rt {
+		font-size: 75%;
+		color: #999;
+		text-align: left;
+	}
+	th rt {
+		text-align: center;
+	}
+
+	.entry {
+		font-style: oblique;
+		padding-left: 0.5em;
+	}
+	.entry:before {
+		content: "";
+		position: absolute;
+		border-bottom: 1px dotted #000;
+		width: 100%;
+		height: 2.25em;
+		margin-left: -0.25em;
+	}
+
+	.bank h2 {
+		font-size: 12px; margin: 0
+	}
+	.bank dl {
+		margin-left: 3em;
+	}
+	.bank dd:after {
+		display: none;
+	}
+	.bank dd {
+		margin-right: 1em;
+	}
+	.bank dd:first-of-type:after {
+		content: '\A';
+		white-space: pre;
+		display: inline;
+	}
+	</style>
+</head>
+<body>
+<header>
+	<h1><ruby>
+		PVM sąskaita-faktūra
+		<rp>/</rp>
+		<rt>Invoice</rt>
+	</ruby><br/><ruby>
+		Serija SAMPLE nr. 1
+		<rp>/</rp>
+		<rt>No. SAMPLE-1</rt>
+	</ruby></h1>
+	<p><ruby>
+		2013 m. birželio 30 d.
+		<rp>/</rp>
+		<rt>30/Jun/2013</rt>
+	</ruby></p>
+</header>
+
+<div class="from">
+	<h2>MB „Example.com”</h2>
+	<p>
+		Neaiškus pr. 000-00,<br/>
+LT-00001 Kaunas<br/>
+Lietuva<br/>
+<br/>
++370 000 00001
+	</p>
+	<dl>
+		<dt><ruby>
+			Įmonės kodas
+			<rp>/</rp>
+			<rt>Company number</rt>
+		</ruby></dt>
+		<dd>000000001</dd>
+
+		<dt><ruby>
+			PVM mokėtojo kodas
+			<rp>/</rp>
+			<rt>VAT number</rt>
+		</ruby></dt>
+		<dd>LT100000000001</dd>
+	</dl>
+</div>
+
+<div class="to">
+	<h2>Some Irish Company Ltd.</h2>
+	<p>
+		Magic Building<br/>
+Magic Road<br/>
+Dublin 123<br/>
+Ireland / Airija<br/>
++353 1 000 0000
+	</p>
+	<dl>
+		<dt><ruby>
+			Įmonės kodas
+			<rp>/</rp>
+			<rt>Company number</rt>
+		</ruby></dt>
+		<dd>000000</dd>
+
+		<dt><ruby>
+			PVM mokėtojo kodas
+			<rp>/</rp>
+			<rt>VAT number</rt>
+		</ruby></dt>
+		<dd>IE0000000R</dd>
+
+	</dl>
+</div>
+
+<section>
+	<table>
+		<thead>
+			<tr>
+				<th scope="col"><ruby>
+					Prekės/paslaugos
+					<rp>/</rp>
+					<rt>Goods/services</rt>
+				</ruby></th>
+				<th scope="col"><ruby>
+					Kiekis
+					<rp>/</rp>
+					<rt>Amount</rt>
+				</ruby></th>
+				<th scope="col"><ruby>
+					Mato vnt.
+					<rp>/</rp>
+					<rt>Unit</rt>
+				</ruby></th>
+				<th scope="col"><ruby>
+					Kaina
+					<rp>/</rp>
+					<rt>Price</rt>
+				</ruby></th>
+				<th scope="col" colspan=2><ruby>
+					Suma
+					<rp>/</rp>
+					<rt>Sum</rt>
+				</ruby></th>
+			</tr>
+		</thead>
+		<tr>
+			<th scope="row"><ruby>
+				Programinės įrangos projektavimas ir programavimas
+				<rp>/</rp>
+				<rt>Software design and development</rt>
+			</ruby></th>
+			<td class="num">115</td>
+			<td class="unit"><ruby>
+				val.
+				<rp>/</rp>
+				<rt>hours</rt>
+			</ruby></td>
+			<td class="num">&euro;6.66</td>
+			<td class="num"><ruby>
+				&euro;765.90
+				<rp>/</rp>
+				<rt>2644.50 Lt.</rt>
+			</ruby></td>
+		</tr>
+		<tfoot>
+			<tr class="total">
+				<th scope="row" colspan=4><ruby>
+					Viso:
+					<rp>/</rp>
+					<rt>Total</rt>
+				</ruby></th>
+				<td class="num"><ruby>
+					&euro;765.90
+					<rp>/</rp>
+					<rt>2644.50 Lt.</rt>
+				</ruby></td>
+			</tr>
+			<tr class="total">
+				<th scope="row" colspan=4><ruby>
+					PVM (0%)*:
+					<rp>/</rp>
+					<rt>VAT (0%)*</rt>
+				</ruby></th>
+				<td class="num"><ruby>
+					&euro;0.00
+					<rp>/</rp>
+					<rt>0.00 Lt.</rt>
+				</ruby></td>
+			</tr>
+			<tr class="total">
+				<th scope="row" colspan=4><ruby>
+					Viso (su PVM):
+					<rp>/</rp>
+					<rt>Total (incl. VAT)</rt>
+				</ruby></th>
+				<td class="num"><ruby>
+					&euro;765.90
+					<rp>/</rp>
+					<rt>2644.50 Lt.</rt>
+				</ruby></td>
+			</tr>
+		</tfoot>
+	</table>
+</section>
+<p><ruby>
+	* Pagal LR PVM įstatymo 13 str. 6 dalį, remiantis direktyvos 2006/112/EB 56(1) straipsniu
+	<rp>/</rp>
+	<rt>* By Law on VAT of Republic of Lithuania, Article 13 Part 6, as per Article 56(1) of Council Directive 2006/112/EB</rt>
+</ruby></p>
+
+<dl class="summary">
+
+	
+		<dt><ruby>
+			Mokėtina suma
+			<rp>/</rp>
+			<rt>Amount payable</rt>
+		</ruby></dt>
+		<dd class="entry"><ruby>
+			Septyni šimtai šešiasdešimt penki Eurai 90 ct.
+			<rp>/</rp>
+			<rt>Seven hundred sixty five  Euro 90 ct.</rt>
+		</ruby></dd>
+		<dt><ruby>
+			Ekvivalentas
+			<rp>/</rp>
+			<rt>Equivalent</rt>
+		</ruby></dt>
+		<dd class="entry"><ruby>
+			Du tūkstančiai šeši šimtai keturiasdešimt keturi Litai 50 ct.
+			<rp>/</rp>
+			<rt>Two thousand six hundred forty four  Litas 50 ct.</rt>
+		</ruby></dd>
+	
+
+	<dt><ruby>
+		Sąskaitą išrašė
+		<rp>/</rp>
+		<rt>Issued by</rt>
+	</ruby></dt>
+	<dd class="entry">
+		<ruby>
+			Direktorius
+			<rp>/</rp>
+			<rt>Director</rt>
+		</ruby>
+		Vardenis Pavardenis
+	</dd>
+
+	<dt><ruby>
+		Sąskaitą priėmė
+		<rp>/</rp>
+		<rt>Accepted by</rt>
+	</ruby></dt>
+	<dd class="entry"></dd>
+</dl>
+
+<section class="bank">
+	<h2><ruby>
+		Prašome sumokėti į:
+		<rp>/</rp>
+		<rt>Please pay to:</rt>
+	</ruby></h2>
+	<dl>
+		<dt><ruby>
+			Sąskaitos numeris
+			<rp>/</rp>
+			<rt>Account number</rt>
+		</ruby></dt>
+		<dd>LT00 0000 0000 0000 0000</dd>
+
+		<dt><ruby>
+			Bankas
+			<rp>/</rp>
+			<rt>Bank</rt>
+		</ruby></dt>
+		<dd>Sekundė</dd>
+
+		<dt><ruby>
+			Banko kodas
+			<rp>/</rp>
+			<rt>Bank code</rt>
+		</ruby></dt>
+		<dd>00000</dd>
+
+		<dt><ruby>
+			SWIFT kodas
+			<rp>/</rp>
+			<rt>SWIFT code</rt>
+		</ruby></dt>
+		<dd>SKND LT00</dd>
+
+	</dl>
+</section>
+
+<footer>
+	<p>
+		<a href="mailto:info@example.com">info@example.com</a> <a href="https://example.com">https://example.com</a>
+	</p>
+</footer>
+
+</body>
+</html>
